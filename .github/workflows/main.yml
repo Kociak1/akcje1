@@ -20,36 +20,41 @@ jobs:
         uses: actions/checkout@v4.1.0
       - name: List files
         run: tree
+
   Test:
-    runs-on: ubuntu-lastest
+    name: Test
+    runs-on: ubuntu-latest
     environment: Test
     needs: first_job
     steps:
-    - run: |
-        echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
+      - name: Echo message
+        run: |
+          echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
+          sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
+          echo "My secret is 🤫 '$sec'."
 
   Load-Test:
-    runs-on: ubuntu-lastest
+    name: Load-Test
+    runs-on: ubuntu-latest
     environment: Load-Test
     needs: first_job
     steps:
-    - run: |
-        echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
-        
+      - name: Echo message
+        run: |
+          echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}." 
+          sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
+          echo "My secret is 🤫 '$sec'."
+
   Production:
-    runs-on: ubuntu-lastest
+    name: Production
+    runs-on: ubuntu-latest
     environment:
       name: Production
       url: https://writeabout.net
     needs: [Test, Load-Test]
     steps:
-    - run: |
-        echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}."
-        sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
-        echo "My secret is 🤫 '$sec'."
-        
-        
-    
-   
-  
-    
+      - name: Echo message
+        run: |
+          echo "Hello ${{ vars.WHO_TO_GREET }} 👋 from ${{ github.actor }}."
+          sec=$(echo ${{ secrets.MY_SECRET }} | sed 's/./& /g')
+          echo "My secret is 🤫 '$sec'."
